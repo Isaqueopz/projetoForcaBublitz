@@ -1,0 +1,15 @@
+gato
+cachorro
+elefante
+leao
+tigre
+zebra
+girafa
+panda
+urso
+raposa
+macaco
+coelho
+passaro
+cobra
+peixe

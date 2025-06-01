@@ -5,116 +5,165 @@
 #include <ctype.h>
 #include <unistd.h>
 #include "funcoes.h"
+#include "lista_palavras.h"
 
-#define MAX_TENTATIVAS 6
-#define TAM_MAX_PALAVRA 30
+#define MAX_TENTATIVAS_LEGADO 6
 
-void desenhar_forca(int erros)
-{
-  printf("\n");
-  printf(" ___     \n");
-  printf("|/     |    \n");
-  printf("|      %c     \n", (erros >= 1 ? 'O' : ' '));
-  printf("|     %c%c%c    \n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 4 ? '\\' : ' '));
-  printf("|     %c %c    \n", (erros >= 5 ? '/' : ' '), (erros >= 6 ? '\\' : ' '));
-  printf("|            \n");
-  printf("|_         \n");
-  printf("\n");
+void desenhar_forca(int erros) {
+    printf("\n");
+    printf(" ___     \n");
+    printf("|/     |    \n");
+    printf("|      %c     \n", (erros >= 1 ? 'O' : ' '));
+    printf("|     %c%c%c    \n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 4 ? '\\' : ' '));
+    printf("|     %c %c    \n", (erros >= 5 ? '/' : ' '), (erros >= 6 ? '\\' : ' '));
+    printf("|            \n");
+    printf("|_         \n");
+    printf("\n");
 }
 
-char *escolher_palavra(char *tema, int dificuldade)
-{
-  static char *palavras_animais[] = {
-      "gato", "cachorro", "elefante", "leao", "tigre", "zebra", "girafa", "panda", "urso", "raposa"};
-  static char *palavras_filmes[] = {
-      "matrix", "avatar", "titanic", "inception", "gladiador", "coraline", "jumanji", "rocky", "batman", "up"};
-  static char *palavras_paises[] = {
-      "brasil", "argentina", "portugal", "canada", "australia", "japao", "china", "italia", "egito", "mexico"};
 
-  srand(time(NULL));
-  int indice = rand() % 10; // Temos 10 palavras por tema
 
-  if (strcmp(tema, "1") == 0)
-    return palavras_animais[indice];
-  else if (strcmp(tema, "2") == 0)
-    return palavras_filmes[indice];
-  else if (strcmp(tema, "3") == 0)
-    return palavras_paises[indice];
-  else
-  {
-    printf("Tema inválido.\n");
-    exit(1);
-  }
-}
-
-void jogar(int modo, int dificuldade, char *tema)
-{
-  char *palavra = escolher_palavra(tema, dificuldade);
-  int tamanho = strlen(palavra);
-  int tentativas = dificuldade == 1 ? 6 : 4;
-  int acertos = 0, erros = 0;
-  char chute;
-  int letras_descobertas[TAM_MAX_PALAVRA] = {0};
-
-  time_t inicio = time(NULL);
-  int tempo_limite = 30; // segundos para o modo contra o tempo
-
-  while (tentativas > 0 && acertos < tamanho)
-  {
-    if (modo == 2)
-    {
-      int tempo_restante = tempo_limite - (int)difftime(time(NULL), inicio);
-      if (tempo_restante <= 0)
-      {
-        printf("\n⏰ Tempo esgotado!\n");
-        break;
-      }
-
-      desenhar_forca(erros);                                        // Desenha a forca novamente antes de mostrar o tempo
-      printf("\n⏳ Tempo restante: %d segundos\n", tempo_restante); // Exibe o tempo logo abaixo da forca
-      fflush(stdout);                                               // Força a atualização na tela
-      sleep(1);                                                     // Pausa para mostrar o tempo atualizando
-    }
-    else
-    {
-      desenhar_forca(erros); // Apenas desenha a forca no modo clássico
+void jogar(int modo, int dificuldade, char *tema_id) {
+    NoPalavra *lista_de_palavras = NULL;
+    char nome_arquivo_tema[FILENAME_MAX];
+    if (strcmp(tema_id, "1") == 0) {
+        strcpy(nome_arquivo_tema,"src/animais.txt");
+    } else if (strcmp(tema_id, "2") == 0) {
+        strcpy(nome_arquivo_tema, "src/filmes.txt");
+    } else if (strcmp(tema_id, "3") == 0) {
+        strcpy(nome_arquivo_tema, "src/paises.txt");
+    } else {
+        printf("Tema inválido selecionado.\n");
+        return;
     }
 
-    printf("\nPalavra: ");
-    for (int i = 0; i < tamanho; i++)
-    {
-      if (letras_descobertas[i])
-        printf("%c ", palavra[i]);
-      else
-        printf("_ ");
+    int total_palavras = carregar_palavras_do_arquivo(nome_arquivo_tema, &lista_de_palavras);
+
+    if (total_palavras <= 0) {
+        printf("Nao foi possivel carregar palavras para o tema do arquivo '%s'. Verifique o arquivo.\n", nome_arquivo_tema);
+        if (lista_de_palavras != NULL) liberar_lista_palavras(&lista_de_palavras);
+        return;
     }
 
-    printf("\nDigite uma letra: ");
-    scanf(" %c", &chute);
-    chute = tolower(chute);
-
-    int acertou = 0;
-    for (int i = 0; i < tamanho; i++)
-    {
-      if (tolower(palavra[i]) == chute && !letras_descobertas[i])
-      {
-        letras_descobertas[i] = 1;
-        acertos++;
-        acertou = 1;
-      }
+    char *palavra = obter_palavra_aleatoria(lista_de_palavras, total_palavras);
+    if (palavra == NULL) {
+        printf("Nao foi possivel obter uma palavra aleatoria.\n");
+        liberar_lista_palavras(&lista_de_palavras);
+        return;
     }
 
-    if (!acertou)
-    {
-      tentativas--;
-      erros++;
+    int tamanho = strlen(palavra);
+    int tentativas = (dificuldade == 1 ? 6 : 4);
+    int acertos = 0, erros = 0;
+    char chute;
+
+
+    int *letras_descobertas = (int*) calloc(tamanho, sizeof(int));
+    if (letras_descobertas == NULL) {
+        perror("Erro ao alocar memoria para letras_descobertas");
+        liberar_lista_palavras(&lista_de_palavras);
+        return;
     }
-  }
 
-  desenhar_forca(erros);
 
-  if (acertos == tamanho)
-    printf("\n🎉 Parabéns! Você venceu! A palavra era '%s'.\n", palavra);
-  else
-    printf("\n😢 Fim de jogo. A palavra era '%s'.\n", palavra);
+    time_t inicio = time(NULL);
+    int tempo_limite_global = 120;
+    int tempo_limite_palavra = (dificuldade == 1 ? 45 : 30);
+
+
+    time_t inicio_palavra_timer = time(NULL);
+
+
+    while (erros < tentativas && acertos < tamanho) {
+        desenhar_forca(erros);
+
+        printf("\nPalavra: ");
+        for (int i = 0; i < tamanho; i++) {
+            if (letras_descobertas[i] || palavra[i] == ' ' || palavra[i] == '-') { //
+                printf("%c ", palavra[i]);
+                if (!letras_descobertas[i] && (palavra[i] == ' ' || palavra[i] == '-')) {
+
+                }
+            } else {
+                printf("_ ");
+            }
+        }
+        printf("\nTentativas restantes: %d\n", tentativas - erros);
+
+
+        if (modo == 2) {
+            int tempo_decorrido_palavra = (int)difftime(time(NULL), inicio_palavra_timer);
+            int tempo_restante_palavra = tempo_limite_palavra - tempo_decorrido_palavra;
+
+            if (tempo_restante_palavra <= 0) {
+                printf("\n⏰ Tempo esgotado para esta palavra!\n");
+                erros = tentativas;
+                break;
+            }
+            printf("⏳ Tempo restante para a palavra: %d segundos\n", tempo_restante_palavra);
+        }
+
+
+        printf("Digite uma letra: ");
+
+
+           if (scanf(" %c", &chute) != 1) {
+            int c_err;
+            while ((c_err = getchar()) != '\n' && c_err != EOF);
+            printf("Entrada inválida. Tente novamente.\n");
+            continue;
+        }
+
+
+
+        chute = tolower(chute);
+
+        if (!isalpha(chute)) {
+            printf("Por favor, digite apenas letras.\n");
+            continue;
+        }
+
+        int acertou_letra = 0;
+        int ja_tentada = 0;
+
+        for (int i = 0; i < tamanho; i++) {
+            if (tolower(palavra[i]) == chute) {
+                if (letras_descobertas[i]) {
+                    ja_tentada = 1;
+                } else {
+                    letras_descobertas[i] = 1;
+                    acertos++;
+                    acertou_letra = 1;
+                }
+            }
+        }
+
+        if (ja_tentada && !acertou_letra) {
+            printf("Voce ja tentou esta letra e ela estava correta!\n");
+        } else if (acertou_letra) {
+            printf("Bom chute!\n");
+        } else {
+            printf("Letra nao encontrada.\n");
+            erros++;
+        }
+    }
+
+    desenhar_forca(erros);
+
+    if (acertos == tamanho) {
+        printf("\n🎉 Parabens! Voce venceu! A palavra era '%s'.\n", palavra);
+    } else if (erros >= tentativas && modo == 2 && (int)difftime(time(NULL), inicio_palavra_timer) >= tempo_limite_palavra) {
+
+         printf("\n😢 Fim de jogo. A palavra era '%s'.\n", palavra);
+    }
+    else if (erros >= tentativas) {
+         printf("\n😢 Fim de jogo. Voce foi enforcado! A palavra era '%s'.\n", palavra);
+    }
+    else {
+        printf("\n😢 Fim de jogo. A palavra era '%s'.\n", palavra);
+    }
+
+
+    free(letras_descobertas);
+    liberar_lista_palavras(&lista_de_palavras);
 }

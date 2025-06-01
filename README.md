@@ -51,4 +51,3 @@ Funções e modularização de código
 🎯 Objetivo
 Criar um jogo interativo e envolvente que consolide conhecimentos em programação C, promovendo a prática de conceitos fundamentais de forma divertida.
 
-Se quiser, posso te ajudar também a montar instruções de compilação e execução, ou um roadmap com tarefas pendentes!

@@ -2,7 +2,6 @@
 #define FUNCOES_H
 
 void desenhar_forca(int erros);
-char *escolher_palavra(char *tema, int dificuldade);
-void jogar(int modo, int dificuldade, char *tema);
+void jogar(int modo, int dificuldade, char *tema_id);
 
 #endif
