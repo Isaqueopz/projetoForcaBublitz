@@ -33,7 +33,7 @@ void jogar(int modo, int dificuldade, char *tema_id) {
 } else if (strcmp(tema_id, "3") == 0) {
     strcpy(nome_arquivo_tema, "src/paises.txt");
 } else if (strcmp(tema_id, "4") == 0) {
-    strcpy(nome_arquivo_tema, "src/novelas.txt");  // <-- ADICIONE ESTA LINHA
+    strcpy(nome_arquivo_tema, "src/novelas.txt");
 } else {
     printf("Tema inválido selecionado.\n");
     return;
