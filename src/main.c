@@ -31,7 +31,7 @@ int main() {
 
 
         do {
-            printf("Escolha a dificuldade:\n1 - Medio (6 erros)\n2 - Dificil (4 erros)\n> ");
+            printf("Escolha a dificuldade:\n1 - Normal (6 erros)\n2 - Dificil (4 erros)\n> ");
             if (scanf("%d", &dificuldade) != 1 || (dificuldade != 1 && dificuldade != 2)) {
                 printf("Opcao invalida. Tente novamente.\n");
                 int c;
