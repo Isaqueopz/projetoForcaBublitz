@@ -44,19 +44,22 @@ int main() {
             }
         } while (1);
 
-        do {
-            printf("Escolha o tema:\n1 - Animais\n2 - Filmes\n3 - Paises\n> ");
-            if (scanf("%1s", tema_id) != 1 || (strcmp(tema_id,"1") != 0 && strcmp(tema_id,"2") != 0 && strcmp(tema_id,"3") != 0 ) ) {
-                printf("Opcao invalida. Tente novamente.\n");
-                int c;
-                while ((c = getchar()) != '\n' && c != EOF);
-                strcpy(tema_id, "0");
-            } else {
-                 int c;
-                while ((c = getchar()) != '\n' && c != EOF);
-                break;
-            }
-        } while(1);
+  do {
+    printf("Escolha o tema:\n1 - Animais\n2 - Filmes\n3 - Paises\n4 - Novelas\n> ");
+    if (scanf("%1s", tema_id) != 1 ||
+        (strcmp(tema_id,"1") != 0 && strcmp(tema_id,"2") != 0 &&
+         strcmp(tema_id,"3") != 0 && strcmp(tema_id,"4") != 0)) {
+        printf("Opcao invalida. Tente novamente.\n");
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);
+        strcpy(tema_id, "0");
+    } else {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);
+        break;
+    }
+} while(1);
+
 
 
         jogar(modo, dificuldade, tema_id);

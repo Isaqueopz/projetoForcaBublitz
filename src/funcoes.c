@@ -12,10 +12,10 @@
 void desenhar_forca(int erros) {
     printf("\n");
     printf(" ___     \n");
-    printf("|/     |    \n");
-    printf("|      %c     \n", (erros >= 1 ? 'O' : ' '));
-    printf("|     %c%c%c    \n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 4 ? '\\' : ' '));
-    printf("|     %c %c    \n", (erros >= 5 ? '/' : ' '), (erros >= 6 ? '\\' : ' '));
+    printf("|/  |    \n");
+    printf("|   %c     \n", (erros >= 1 ? 'O' : ' '));
+    printf("|  %c%c%c    \n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 4 ? '\\' : ' '));
+    printf("|  %c %c    \n", (erros >= 5 ? '/' : ' '), (erros >= 6 ? '\\' : ' '));
     printf("|            \n");
     printf("|_         \n");
     printf("\n");
@@ -27,16 +27,17 @@ void jogar(int modo, int dificuldade, char *tema_id) {
     NoPalavra *lista_de_palavras = NULL;
     char nome_arquivo_tema[FILENAME_MAX];
     if (strcmp(tema_id, "1") == 0) {
-        strcpy(nome_arquivo_tema,"src/animais.txt");
-    } else if (strcmp(tema_id, "2") == 0) {
-        strcpy(nome_arquivo_tema, "src/filmes.txt");
-    } else if (strcmp(tema_id, "3") == 0) {
-        strcpy(nome_arquivo_tema, "src/paises.txt");
-    } else {
-        printf("Tema inválido selecionado.\n");
-        return;
-    }
-
+    strcpy(nome_arquivo_tema,"src/animais.txt");
+} else if (strcmp(tema_id, "2") == 0) {
+    strcpy(nome_arquivo_tema, "src/filmes.txt");
+} else if (strcmp(tema_id, "3") == 0) {
+    strcpy(nome_arquivo_tema, "src/paises.txt");
+} else if (strcmp(tema_id, "4") == 0) {
+    strcpy(nome_arquivo_tema, "src/novelas.txt");  // <-- ADICIONE ESTA LINHA
+} else {
+    printf("Tema inválido selecionado.\n");
+    return;
+}
     int total_palavras = carregar_palavras_do_arquivo(nome_arquivo_tema, &lista_de_palavras);
 
     if (total_palavras <= 0) {
