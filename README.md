@@ -48,6 +48,24 @@ Para rodar o Jogo da Forca no seu computador, siga os passos abaixo:
     * No Windows, você pode instalar o [MinGW-w64](https://mingw-w64.org/doku.php/download).
     * No Linux (Ubuntu/Debian), instale com `sudo apt install build-essential`.
     * No macOS, instale o [Xcode Command Line Tools](https://developer.apple.com/xcode/features/).
+* **Make (ferramenta de automação de compilação).**
+    * **Para Windows (usando MinGW-w64):**
+        O `make` não é incluído por padrão com o MinGW-w64. Para obtê-lo, a maneira mais recomendada é através do **MSYS2**, um ambiente que fornece ferramentas Linux/Unix-like no Windows.
+        1.  **Instale o MSYS2:** Baixe e instale o MSYS2 do [site oficial do MSYS2](https://www.msys2.org/). Siga as instruções de instalação padrão.
+        2.  **Instale o `make` via MSYS2:** Após a instalação, abra o terminal "MSYS2 MSYS" (procure no menu Iniciar).
+            * Primeiro, atualize o ambiente:
+                ```bash
+                pacman -Syu
+                ```
+            * Em seguida, instale o `make`:
+                ```bash
+                pacman -S make
+                ```
+        3.  **Configure a Variável de Ambiente PATH do Windows:** O executável `make` será instalado em um diretório dentro da estrutura do MSYS2 (por exemplo: `/usr/bin/make` dentro do ambiente MSYS2, que geralmente corresponde a `C:\msys64\usr\bin` no Windows, assumindo a instalação padrão em `C:\msys64`).
+            * **É essencial adicionar este diretório (`C:\msys64\usr\bin` ou o caminho correspondente à sua instalação MSYS2) à variável de ambiente `Path` do sistema Windows.** Isso permite que o PowerShell e outros prompts de comando encontrem e executem o `make`.
+            * Após adicionar o caminho, é necessário **reiniciar o PowerShell/Prompt de Comando** para que as alterações nas variáveis de ambiente entrem em vigor.
+    * No Linux (Ubuntu/Debian), faz parte do pacote `build-essential`.
+    * No macOS, faz parte do Xcode Command Line Tools.
 * Git (opcional, para clonar o repositório)
 
 **Passo a Passo:**
@@ -56,12 +74,11 @@ Para rodar o Jogo da Forca no seu computador, siga os passos abaixo:
     * **Usando Git (recomendado):**
         Abra seu terminal ou prompt de comando e execute:
         ```bash
-        git clone https://github.com/Isaqueopz/projetoForcaBublitz.git
+        git clone [https://github.com/Isaqueopz/projetoForcaBublitz.git](https://github.com/Isaqueopz/projetoForcaBublitz.git)
         cd projetoForcaBublitz
         ```
-
     * **Baixando o ZIP:**
-        Se você não usa Git, pode baixar o projeto como um arquivo ZIP do repositório (geralmente há um botão "Code" e "Download ZIP" na página do GitHub, se for o caso). Descompacte o arquivo em uma pasta de sua preferência.
+        Se você não usa Git, pode baixar o projeto como um arquivo ZIP do repositório (geralmente há um botão "Code" e "Download ZIP" na página do GitHub). Descompacte o arquivo em uma pasta de sua preferência.
 
 2.  **Compilar o Projeto:**
     * Navegue até a pasta raiz do projeto (onde está o arquivo `Makefile`) no seu terminal ou prompt de comando.
