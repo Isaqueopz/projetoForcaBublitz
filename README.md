@@ -56,10 +56,10 @@ Para rodar o Jogo da Forca no seu computador, siga os passos abaixo:
     * **Usando Git (recomendado):**
         Abra seu terminal ou prompt de comando e execute:
         ```bash
-        git clone [https://github.com/SeuUsuario/projetoForcaBublitz.git](https://github.com/SeuUsuario/projetoForcaBublitz.git)
+        git clone https://github.com/Isaqueopz/projetoForcaBublitz.git
         cd projetoForcaBublitz
         ```
-        *(Substitua `https://github.com/SeuUsuario/projetoForcaBublitz.git` pelo link real do seu repositório, se ele estiver no GitHub.)*
+
     * **Baixando o ZIP:**
         Se você não usa Git, pode baixar o projeto como um arquivo ZIP do repositório (geralmente há um botão "Code" e "Download ZIP" na página do GitHub, se for o caso). Descompacte o arquivo em uma pasta de sua preferência.
 
